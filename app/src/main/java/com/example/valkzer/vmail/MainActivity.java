@@ -1,18 +1,30 @@
 package com.example.valkzer.vmail;
 
-import android.app.AlertDialog;
+import android.view.View;
+import android.os.Bundle;
+import android.content.Intent;
 import android.content.Context;
+import android.app.AlertDialog;
+import android.widget.ProgressBar;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+
+import java.net.MalformedURLException;
 
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.SettableFuture;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.example.valkzer.vmail.Util.AzureWebServicesHelper;
+import com.microsoft.windowsazure.mobileservices.http.ServiceFilter;
 import com.microsoft.windowsazure.mobileservices.MobileServiceClient;
-import com.microsoft.windowsazure.mobileservices.authentication.MobileServiceAuthenticationProvider;
+import com.microsoft.windowsazure.mobileservices.http.ServiceFilterRequest;
+import com.microsoft.windowsazure.mobileservices.http.ServiceFilterResponse;
+import com.microsoft.windowsazure.mobileservices.http.NextServiceFilterCallback;
 import com.microsoft.windowsazure.mobileservices.authentication.MobileServiceUser;
+import com.microsoft.windowsazure.mobileservices.authentication.MobileServiceAuthenticationProvider;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,51 +33,89 @@ public class MainActivity extends AppCompatActivity {
      */
     private MobileServiceClient mClient;
 
+    /**
+     * Progress spinner to use for table operations
+     */
+    private ProgressBar mProgressBar;
+
     public static final String SHARED_PREFERENCE_FILE = "temp";
     public static final String USER_ID_PREFERENCE = "uid";
     public static final String TOKEN_PREFERENCE = "token";
+    public static final String EMAIL_ID = "email_id";
+    public static final String EMAIL_ADDRESS = "email_address";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        this.authenticate();
+        try {
+            // Create the Mobile Service Client getMobileServiceClient, using the provided
+
+            // Mobile Service URL and key
+            mClient = AzureWebServicesHelper.getMobileServiceClient(this).withFilter(new ProgressFilter());
+
+            this.authenticate();
+
+        } catch (MalformedURLException e) {
+            createAndShowDialog(new Exception("There was an error creating the Mobile Service. Verify the URL"), "Error");
+        } catch (Exception e) {
+            createAndShowDialog(e, "Error");
+        }
     }
 
-    private void openHomeScreen() {
+    private void openHomeScreen(boolean showWelcomeBack) {
 
+        findViewById(R.id.btnAuthenticate).setVisibility(View.INVISIBLE);
+
+        if (showWelcomeBack) {
+            createAndShowDialog("Welcome back", "It's been a while!");
+        } else {
+            createAndShowDialog("Register your email address", "Please proceed to register your email address.");
+        }
+
+        if (checkHasRegisteredEmailAddress()) {
+            Intent myIntent = new Intent(MainActivity.this, UnreadEmailsActivity.class);
+            MainActivity.this.startActivity(myIntent);
+        } else {
+            Intent myIntent = new Intent(MainActivity.this, CreateEmailAddressActivity.class);
+            MainActivity.this.startActivity(myIntent);
+        }
+    }
+
+    private boolean checkHasRegisteredEmailAddress() {
+        SharedPreferences prefs = getSharedPreferences(SHARED_PREFERENCE_FILE, Context.MODE_PRIVATE);
+        String emailAddress = prefs.getString(EMAIL_ADDRESS, null);
+        String emailId = prefs.getString(EMAIL_ID, null);
+        return (emailAddress != null && emailId != null);
     }
 
     private void authenticate() {
         if (loadUserTokenCache(mClient)) {
-            createAndShowDialog("You are now logged in", "Success");
+            openHomeScreen(true);
         } else {
             ListenableFuture<MobileServiceUser> mLogin =
                     mClient.login(MobileServiceAuthenticationProvider.Facebook);
             Futures.addCallback(mLogin, new FutureCallback<MobileServiceUser>() {
                 @Override
                 public void onFailure(@NonNull Throwable exc) {
-                    createAndShowDialog("You must log in. Login Required", "Error");
+                    findViewById(R.id.btnAuthenticate).setVisibility(View.VISIBLE);
                 }
 
                 @Override
                 public void onSuccess(MobileServiceUser user) {
-                    createAndShowDialog(String.format(
-                            "You are now logged in - %1$2s",
-                            user.getUserId()), "Success");
                     cacheUserToken(mClient.getCurrentUser());
                     try {
-                        openHomeScreen();
+                        openHomeScreen(false);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-
                 }
             });
         }
     }
 
-    private boolean loadUserTokenCache(MobileServiceClient client) {
+    public boolean loadUserTokenCache(MobileServiceClient client) {
         SharedPreferences prefs = getSharedPreferences(SHARED_PREFERENCE_FILE, Context.MODE_PRIVATE);
         String userId = prefs.getString(USER_ID_PREFERENCE, null);
         if (userId == null)
@@ -73,9 +123,7 @@ public class MainActivity extends AppCompatActivity {
         String token = prefs.getString(TOKEN_PREFERENCE, null);
         if (token == null)
             return false;
-        MobileServiceUser user = new MobileServiceUser(userId);
-        user.setAuthenticationToken(token);
-        client.setCurrentUser(user);
+        AzureWebServicesHelper.setAuth(client, userId, token);
         return true;
     }
 
@@ -128,5 +176,51 @@ public class MainActivity extends AppCompatActivity {
         builder.setMessage(message);
         builder.setTitle(title);
         builder.create().show();
+    }
+
+    public void doAuth(View view) {
+        this.authenticate();
+    }
+
+    private class ProgressFilter implements ServiceFilter {
+
+        @Override
+        public ListenableFuture<ServiceFilterResponse> handleRequest(ServiceFilterRequest request, NextServiceFilterCallback nextServiceFilterCallback) {
+
+            final SettableFuture<ServiceFilterResponse> resultFuture = SettableFuture.create();
+
+
+            runOnUiThread(new Runnable() {
+
+                @Override
+                public void run() {
+                    if (mProgressBar != null) mProgressBar.setVisibility(ProgressBar.VISIBLE);
+                }
+            });
+
+            ListenableFuture<ServiceFilterResponse> future = nextServiceFilterCallback.onNext(request);
+
+            Futures.addCallback(future, new FutureCallback<ServiceFilterResponse>() {
+                @Override
+                public void onFailure(@NonNull Throwable e) {
+                    resultFuture.setException(e);
+                }
+
+                @Override
+                public void onSuccess(ServiceFilterResponse response) {
+                    runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            if (mProgressBar != null) mProgressBar.setVisibility(ProgressBar.GONE);
+                        }
+                    });
+
+                    resultFuture.set(response);
+                }
+            });
+
+            return resultFuture;
+        }
     }
 }
