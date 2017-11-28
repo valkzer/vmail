@@ -26,7 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:ems="10"
-        android:text="@string/vmail"
+        android:text="@string/app_name"
         android:textAlignment="center"
         android:textStyle="italic"
         app:layout_constraintHorizontal_bias="0.502"

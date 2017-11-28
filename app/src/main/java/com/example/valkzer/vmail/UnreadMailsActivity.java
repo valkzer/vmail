@@ -98,7 +98,7 @@ public class UnreadMailsActivity extends AppCompatActivity {
     }
 
     private void setUpTitle() {
-        String emailAddress = getCurrentEmailAddress().getEmailAddress();
+        String emailAddress = getCurrentEmailAddress().getEmail();
         this.setTitle(emailAddress != null ? emailAddress : "UNREAD EMAILS");
     }
 }

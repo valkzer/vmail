@@ -29,7 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:ems="10"
-        android:hint="@string/someone_vmail_com"
+        android:hint="@string/someone_at_vmail_com"
         android:inputType="textEmailAddress"
         android:textAlignment="textStart"
         app:layout_constraintHorizontal_bias="0.502"

@@ -1,17 +1,20 @@
 <resources>
-    <string name="app_name">vmail</string>
-    <string name="vmail">VMail</string>
+    <string name="app_name">VMail</string>
     <string name="authentication">Authentication</string>
     <string name="authenticate">Authenticate</string>
-    <string name="register_new_email">Register new emailAddress</string>
+    <string name="register_new_email">Register new email</string>
     <string name="register_email_address">Register Email Address</string>
     <string name="title_activity_unread_emails">Unread emails</string>
-    <string name="email_address">emailAddress address</string>
-    <string name="someone_vmail_com">someone@vmail.com</string>
+    <string name="email_address">email address</string>
+    <string name="someone_at_vmail_com">someone@vmail.com</string>
     <string name="register">Register</string>
     <string name="configure_email">Configure mail address</string>
     <string name="title_activity_create_mail">Create Mail</string>
     <string name="subject">Subject</string>
     <string name="your_message">Your message</string>
     <string name="send">Send</string>
+    <string name="reply">Reply</string>
+    <string name="read">Read</string>
+    <string name="message">Message</string>
+    <string name="from">From</string>
 </resources>

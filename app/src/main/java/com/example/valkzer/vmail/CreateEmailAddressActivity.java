@@ -2,7 +2,6 @@ package com.example.valkzer.vmail;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Toast;
 import android.content.Intent;
 import android.content.Context;
 import android.widget.TextView;
@@ -22,19 +21,14 @@ public class CreateEmailAddressActivity extends AppCompatActivity {
     public void registerEmailAddress(View view) {
         String emailAddress = ((TextView) findViewById(R.id.txtEmailAddress)).getText().toString();
         final EmailAddress newEmailAddress = new EmailAddress();
-        newEmailAddress.setEmailAddress(emailAddress);
-        try {
-            newEmailAddress.register(this, new Runnable() {
-                @Override
-                public void run() {
-                    setRegisteredEmailAddress(newEmailAddress);
-                    openUnreadEmailsActivity();
-                }
-            });
-        } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), "Unable to create user", Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }
+        newEmailAddress.setEmail(emailAddress);
+        newEmailAddress.register(getApplicationContext(), new Runnable() {
+            @Override
+            public void run() {
+                setRegisteredEmailAddress(newEmailAddress);
+                openUnreadEmailsActivity();
+            }
+        });
     }
 
     private void openUnreadEmailsActivity() {
@@ -46,7 +40,7 @@ public class CreateEmailAddressActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences(MainActivity.SHARED_PREFERENCE_FILE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(MainActivity.EMAIL_ID, emailAddress.getId());
-        editor.putString(MainActivity.EMAIL_ADDRESS, emailAddress.getEmailAddress());
+        editor.putString(MainActivity.EMAIL_ADDRESS, emailAddress.getEmail());
         editor.commit();
     }
 }

@@ -19,7 +19,7 @@ public class Mail extends AzureResource {
     private String subject;
     private String to;
     private String from;
-    private String body;
+    private String message;
     private Boolean read;
 
     public Mail() {
@@ -31,7 +31,7 @@ public class Mail extends AzureResource {
         this.subject = subject;
         this.to = to;
         this.from = from;
-        this.body = body;
+        this.message = body;
         this.read = read;
     }
 
@@ -71,12 +71,12 @@ public class Mail extends AzureResource {
         return this;
     }
 
-    public String getBody() {
-        return body;
+    public String getMessage() {
+        return message;
     }
 
-    public Mail setBody(String body) {
-        this.body = body;
+    public Mail setMessage(String message) {
+        this.message = message;
         return this;
     }
 
@@ -84,7 +84,7 @@ public class Mail extends AzureResource {
         return read;
     }
 
-    public Mail setRead(Boolean read) {
+    private Mail setRead(Boolean read) {
         this.read = read;
         return this;
     }
@@ -104,11 +104,7 @@ public class Mail extends AzureResource {
 
                     listener.triggerEvent(mails);
 
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (MalformedURLException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -119,7 +115,7 @@ public class Mail extends AzureResource {
         runAsyncTask(task);
     }
 
-    public void send(final Context context, final Runnable runnable) throws ExecutionException, InterruptedException, MalformedURLException {
+    public void send(final Context context, final Runnable runnable) {
 
         final Mail mail = this;
         AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
@@ -129,11 +125,27 @@ public class Mail extends AzureResource {
                     final Mail newMail = AzureWebServicesHelper.getMailsTable(context).insert(mail).get();
                     setId(newMail.getId());
                     runnable.run();
-                } catch (ExecutionException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (MalformedURLException e) {
+                }
+                return null;
+            }
+        };
+
+        runAsyncTask(task);
+    }
+
+    public void markAsRead(final Context context) {
+
+        this.setRead(true);
+        final Mail mail = this;
+
+        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    AzureWebServicesHelper.getMailsTable(context).update(mail).get();
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
                 return null;
