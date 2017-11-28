@@ -84,7 +84,7 @@ public class Mail extends AzureResource {
         return read;
     }
 
-    private Mail setRead(Boolean read) {
+    public Mail setRead(Boolean read) {
         this.read = read;
         return this;
     }
