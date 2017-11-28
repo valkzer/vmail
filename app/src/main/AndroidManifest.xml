@@ -20,9 +20,11 @@
         </activity>
         <activity android:name=".CreateEmailAddressActivity" />
         <activity
-            android:name=".UnreadEmailsActivity"
+            android:name=".UnreadMailsActivity"
             android:label="@string/title_activity_unread_emails"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".CreateMailActivity" />
+        <activity android:name=".ReadMailActivity"></activity>
     </application>
 
 </manifest>

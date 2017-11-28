@@ -7,13 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.valkzer.vmail.Models.EmailAddress;
-import com.microsoft.windowsazure.mobileservices.authentication.MobileServiceUser;
-
-import java.net.MalformedURLException;
-import java.util.concurrent.ExecutionException;
 
 public class CreateEmailAddressActivity extends AppCompatActivity {
 
@@ -41,7 +36,7 @@ public class CreateEmailAddressActivity extends AppCompatActivity {
     }
 
     private void openUnreadEmailsActivity() {
-        Intent myIntent = new Intent(CreateEmailAddressActivity.this, UnreadEmailsActivity.class);
+        Intent myIntent = new Intent(CreateEmailAddressActivity.this, UnreadMailsActivity.class);
         CreateEmailAddressActivity.this.startActivity(myIntent);
     }
 

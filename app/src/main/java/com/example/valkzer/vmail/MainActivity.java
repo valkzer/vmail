@@ -64,23 +64,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void openHomeScreen(boolean showWelcomeBack) {
+    private void openHomeScreen() {
 
         findViewById(R.id.btnAuthenticate).setVisibility(View.INVISIBLE);
-
-        if (showWelcomeBack) {
-            createAndShowDialog("Welcome back", "It's been a while!");
-        } else {
-            createAndShowDialog("Register your email address", "Please proceed to register your email address.");
-        }
+        Intent myIntent;
 
         if (checkHasRegisteredEmailAddress()) {
-            Intent myIntent = new Intent(MainActivity.this, UnreadEmailsActivity.class);
-            MainActivity.this.startActivity(myIntent);
+            myIntent = new Intent(MainActivity.this, UnreadMailsActivity.class);
         } else {
-            Intent myIntent = new Intent(MainActivity.this, CreateEmailAddressActivity.class);
-            MainActivity.this.startActivity(myIntent);
+            myIntent = new Intent(MainActivity.this, CreateEmailAddressActivity.class);
         }
+
+        myIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        MainActivity.this.startActivity(myIntent);
     }
 
     private boolean checkHasRegisteredEmailAddress() {
@@ -92,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void authenticate() {
         if (loadUserTokenCache(mClient)) {
-            openHomeScreen(true);
+            openHomeScreen();
         } else {
             ListenableFuture<MobileServiceUser> mLogin =
                     mClient.login(MobileServiceAuthenticationProvider.Facebook);
@@ -106,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onSuccess(MobileServiceUser user) {
                     cacheUserToken(mClient.getCurrentUser());
                     try {
-                        openHomeScreen(false);
+                        openHomeScreen();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

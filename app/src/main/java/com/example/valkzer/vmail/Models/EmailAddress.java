@@ -4,12 +4,13 @@ import android.os.Build;
 import android.os.AsyncTask;
 import android.content.Context;
 
+import com.example.valkzer.vmail.Util.AzureResource;
 import com.example.valkzer.vmail.Util.AzureWebServicesHelper;
 
 import java.net.MalformedURLException;
 import java.util.concurrent.ExecutionException;
 
-public class EmailAddress {
+public class EmailAddress extends AzureResource {
 
     private String id;
     private String emailAddress;
@@ -68,11 +69,4 @@ public class EmailAddress {
         return AzureWebServicesHelper.getEmailAddressTable(context).insert(item).get();
     }
 
-    private AsyncTask<Void, Void, Void> runAsyncTask(AsyncTask<Void, Void, Void> task) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            return task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            return task.execute();
-        }
-    }
 }
