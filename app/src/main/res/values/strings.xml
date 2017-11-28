@@ -11,4 +11,7 @@
     <string name="register">Register</string>
     <string name="configure_email">Configure mail address</string>
     <string name="title_activity_create_mail">Create Mail</string>
+    <string name="subject">Subject</string>
+    <string name="your_message">Your message</string>
+    <string name="send">Send</string>
 </resources>

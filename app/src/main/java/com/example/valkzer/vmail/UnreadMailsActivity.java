@@ -6,12 +6,12 @@ import android.view.View;
 import android.view.MenuItem;
 import android.content.Intent;
 import android.content.Context;
+import android.widget.ListView;
 import android.view.MenuInflater;
 import android.content.SharedPreferences;
 import android.support.v7.widget.Toolbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.design.widget.FloatingActionButton;
-import android.widget.ListView;
 
 import com.example.valkzer.vmail.Models.Mail;
 import com.example.valkzer.vmail.Util.EventListener;
@@ -31,6 +31,12 @@ public class UnreadMailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_unread_mails);
         setUpMenus();
         setUpTitle();
+        loadUnreadMails();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         loadUnreadMails();
     }
 

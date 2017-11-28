@@ -1,12 +1,13 @@
 package com.example.valkzer.vmail;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
+import android.content.Intent;
+import android.content.Context;
 import android.widget.TextView;
+import android.content.SharedPreferences;
+import android.support.v7.app.AppCompatActivity;
 
 import com.example.valkzer.vmail.Models.EmailAddress;
 
@@ -31,6 +32,7 @@ public class CreateEmailAddressActivity extends AppCompatActivity {
                 }
             });
         } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "Unable to create user", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
     }

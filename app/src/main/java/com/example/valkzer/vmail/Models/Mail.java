@@ -23,7 +23,7 @@ public class Mail extends AzureResource {
     private Boolean read;
 
     public Mail() {
-
+        this.read = false;
     }
 
     public Mail(String id, String subject, String to, String from, String body, Boolean read) {
@@ -97,12 +97,10 @@ public class Mail extends AzureResource {
 
                 final List<Mail> mails;
                 try {
-//                    mails = AzureWebServicesHelper.getEmailsTable(context).where()
-//                            .field("To").eq(val(emailAddress.getId()))
-//                            .field("Read").eq(val(false))
-//                            .execute().get();
-
-                    mails = AzureWebServicesHelper.getEmailsTable(context).where().execute().get();
+                    mails = AzureWebServicesHelper.getMailsTable(context).where()
+                            .field("To").eq(val(emailAddress.getId())).and()
+                            .field("Read").eq(val(false))
+                            .execute().get();
 
                     listener.triggerEvent(mails);
 
@@ -118,6 +116,30 @@ public class Mail extends AzureResource {
                 return null;
             }
         };
+        runAsyncTask(task);
+    }
+
+    public void send(final Context context, final Runnable runnable) throws ExecutionException, InterruptedException, MalformedURLException {
+
+        final Mail mail = this;
+        AsyncTask<Void, Void, Void> task = new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                try {
+                    final Mail newMail = AzureWebServicesHelper.getMailsTable(context).insert(mail).get();
+                    setId(newMail.getId());
+                    runnable.run();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+        };
+
         runAsyncTask(task);
     }
 }
