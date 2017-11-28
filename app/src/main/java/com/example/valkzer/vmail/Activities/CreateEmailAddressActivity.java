@@ -1,4 +1,4 @@
-package com.example.valkzer.vmail;
+package com.example.valkzer.vmail.Activities;
 
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +8,7 @@ import android.widget.TextView;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 
+import com.example.valkzer.vmail.R;
 import com.example.valkzer.vmail.Models.EmailAddress;
 
 public class CreateEmailAddressActivity extends AppCompatActivity {

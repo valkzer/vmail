@@ -13,7 +13,7 @@ import android.support.annotation.NonNull;
 
 import com.example.valkzer.vmail.R;
 import com.example.valkzer.vmail.Models.Mail;
-import com.example.valkzer.vmail.ReadMailActivity;
+import com.example.valkzer.vmail.Activities.ReadMailActivity;
 
 import com.google.gson.Gson;
 

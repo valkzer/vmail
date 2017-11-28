@@ -1,17 +1,15 @@
-package com.example.valkzer.vmail;
+package com.example.valkzer.vmail.Activities;
 
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 import android.content.Intent;
-import android.content.Context;
 import android.widget.TextView;
 import android.widget.ArrayAdapter;
-import android.content.SharedPreferences;
 import android.widget.AutoCompleteTextView;
-import android.support.v7.app.AppCompatActivity;
 
 import com.google.gson.Gson;
+import com.example.valkzer.vmail.R;
 import com.example.valkzer.vmail.Models.Mail;
 import com.example.valkzer.vmail.Util.EventListener;
 import com.example.valkzer.vmail.Models.EmailAddress;
@@ -19,7 +17,7 @@ import com.example.valkzer.vmail.Models.EmailAddress;
 import java.util.List;
 import java.util.ArrayList;
 
-public class CreateMailActivity extends AppCompatActivity {
+public class CreateMailActivity extends AuthenticatedActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +25,6 @@ public class CreateMailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_mail);
         checkIsReply();
         fillToWithEmailAddressOptions();
-        setUpTitle();
     }
 
     @Override
@@ -75,13 +72,6 @@ public class CreateMailActivity extends AppCompatActivity {
         });
     }
 
-    private EmailAddress getCurrentEmailAddress() {
-        SharedPreferences prefs = getSharedPreferences(MainActivity.SHARED_PREFERENCE_FILE, Context.MODE_PRIVATE);
-        String emailAddress = prefs.getString(MainActivity.EMAIL_ADDRESS, null);
-        String id = prefs.getString(MainActivity.EMAIL_ADDRESS, null);
-        return new EmailAddress(id, emailAddress);
-    }
-
     public void sendMail(View view) {
 
         String body = ((TextView) findViewById(R.id.txtBody)).getText().toString();
@@ -111,8 +101,4 @@ public class CreateMailActivity extends AppCompatActivity {
 
     }
 
-    private void setUpTitle() {
-        String emailAddress = getCurrentEmailAddress().getEmail();
-        this.setTitle(emailAddress != null ? emailAddress : "UNREAD EMAILS");
-    }
 }

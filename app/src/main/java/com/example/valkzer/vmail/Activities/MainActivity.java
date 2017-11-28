@@ -1,4 +1,4 @@
-package com.example.valkzer.vmail;
+package com.example.valkzer.vmail.Activities;
 
 import android.view.View;
 import android.os.Bundle;
@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import java.net.MalformedURLException;
 
+import com.example.valkzer.vmail.R;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.SettableFuture;
@@ -50,11 +51,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         try {
-            // Create the Mobile Service Client getMobileServiceClient, using the provided
 
-            // Mobile Service URL and key
             mClient = AzureWebServicesHelper.getMobileServiceClient(this).withFilter(new ProgressFilter());
-
             this.authenticate();
 
         } catch (MalformedURLException e) {

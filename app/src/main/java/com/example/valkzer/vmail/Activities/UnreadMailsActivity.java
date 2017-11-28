@@ -1,26 +1,23 @@
-package com.example.valkzer.vmail;
+package com.example.valkzer.vmail.Activities;
 
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.view.MenuItem;
 import android.content.Intent;
-import android.content.Context;
 import android.widget.ListView;
 import android.view.MenuInflater;
-import android.content.SharedPreferences;
 import android.support.v7.widget.Toolbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.design.widget.FloatingActionButton;
 
+import com.example.valkzer.vmail.R;
 import com.example.valkzer.vmail.Models.Mail;
 import com.example.valkzer.vmail.Util.EventListener;
-import com.example.valkzer.vmail.Models.EmailAddress;
 import com.example.valkzer.vmail.Adapters.MailListAdapter;
 
 import java.util.List;
 
-public class UnreadMailsActivity extends AppCompatActivity {
+public class UnreadMailsActivity extends AuthenticatedActivity {
 
     private MailListAdapter mAdapter;
 
@@ -76,13 +73,6 @@ public class UnreadMailsActivity extends AppCompatActivity {
         return true;
     }
 
-    private EmailAddress getCurrentEmailAddress() {
-        SharedPreferences prefs = getSharedPreferences(MainActivity.SHARED_PREFERENCE_FILE, Context.MODE_PRIVATE);
-        String emailAddress = prefs.getString(MainActivity.EMAIL_ADDRESS, null);
-        String id = prefs.getString(MainActivity.EMAIL_ADDRESS, null);
-        return new EmailAddress(id, emailAddress);
-    }
-
     private void setUpMenus() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -95,10 +85,5 @@ public class UnreadMailsActivity extends AppCompatActivity {
                 UnreadMailsActivity.this.startActivity(myIntent);
             }
         });
-    }
-
-    private void setUpTitle() {
-        String emailAddress = getCurrentEmailAddress().getEmail();
-        this.setTitle(emailAddress != null ? emailAddress : "UNREAD EMAILS");
     }
 }
