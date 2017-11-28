@@ -128,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(USER_ID_PREFERENCE, user.getUserId());
         editor.putString(TOKEN_PREFERENCE, user.getAuthenticationToken());
+        AzureWebServicesHelper.setAuth(mClient, user.getUserId(), user.getAuthenticationToken());
         editor.apply();
     }
 
