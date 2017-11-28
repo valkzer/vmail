@@ -31,8 +31,10 @@ public class UnreadMailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_unread_mails);
         setUpMenus();
         setUpTitle();
+        loadUnreadMails();
+    }
 
-
+    private void loadUnreadMails() {
         mAdapter = new MailListAdapter(this, R.layout.mail_list_item);
         ListView listViewToDo = (ListView) findViewById(R.id.mail_list);
         listViewToDo.setAdapter(mAdapter);
@@ -54,8 +56,6 @@ public class UnreadMailsActivity extends AppCompatActivity {
                 });
             }
         });
-
-
     }
 
     public void openCreateEmailAddressActivity(MenuItem item) {
