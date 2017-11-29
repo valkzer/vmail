@@ -98,7 +98,7 @@ public class Mail extends AzureResource {
                 final List<Mail> mails;
                 try {
                     mails = AzureWebServicesHelper.getMailsTable(context).where()
-                            .field("To").eq(val(emailAddress.getId())).and()
+                            .field("To").eq(val(emailAddress.getEmail())).and()
                             .field("Read").eq(val(false))
                             .execute().get();
 
